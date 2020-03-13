@@ -4,6 +4,7 @@ import os
 import json
 import binascii
 from pwn import * 
+import random
 
 
 # Unicorn imports
@@ -59,6 +60,12 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
         self.got = self.elf.got
         self.get_arch_info()
         Uc.__init__(self, self.uc_arch, self.uc_mode + self.uc_endian)
+
+    def rand_seed(self , seed_len):
+        sa = []
+        for i in range(seed_len):
+            sa.append( chr(random.randint(0,255)))
+        return ''.join(sa)
 
     def _load_context(self):
         """
@@ -528,7 +535,6 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
             #     self.show_instrs()
             import datetime
             oldtime=datetime.datetime.now()
-            # uc_result = self.emu_start(start_address , end_address)
             try:
                 uc_result = self.emu_start(start_address , end_address)
             except UcError as e:
@@ -542,7 +548,7 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
             print "time : {}".format( (newtime-oldtime).microseconds )
             print "Round : {}".format(rounds)
             rounds += 1
-            raw_input()
+            # raw_input()
 
     def init_class(self): 
         """
