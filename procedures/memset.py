@@ -25,8 +25,8 @@ class memset():
         if ch is None:
             ch = ""
         if self.enable_debug:
-            print "addr:{} ch:{} n:{}".format(hex(addr) , hex(ch) , hex(n))
+            print ("addr:{} ch:{} n:{}".format(hex(addr) , hex(ch) , hex(n)))
         self.fc.mem_write( addr, chr(ch)*n )
         self.fc.reg_write( self.hc.REG_RES[0] , addr)
         if self.enable_debug:
-            print "addr -->:{}".format(self.fc.mem_read(addr ,n))
+            print ("addr -->:{}".format(self.fc.mem_read(addr ,n)))

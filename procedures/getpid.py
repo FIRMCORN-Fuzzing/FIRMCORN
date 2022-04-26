@@ -16,5 +16,5 @@ class getpid():
         self.enable_debug = enable_debug
         
     def run(self ):
-        print "getpid"
+        print( "getpid")
         return 1

@@ -13,14 +13,14 @@ class memcpy():
         self.enable_debug = enable_debug
 
     def run(self ):
-        print "memcpy"
+        print ("memcpy")
         dest_addr = self.fc.reg_read(self.hc.REG_ARGS[0])
         src_addr = self.fc.reg_read(self.hc.REG_ARGS[1])
         n =  self.fc.reg_read(self.hc.REG_ARGS[2])
         if n==0: n = 1
         if self.enable_debug:
-            print "src_addr : {} dest_addr : {} n : {}".format(hex(src_addr) , hex(dest_addr) , n)
+            print ("src_addr : {} dest_addr : {} n : {}".format(hex(src_addr) , hex(dest_addr) , n))
         src_str = self.fc.mem_read(src_addr , 4)
-        print "src_str : {}".format(str(src_str).encode("hex"))
+        print ("src_str : {}".format(str(src_str).encode("hex")))
         self.fc.mem_write(dest_addr ,str(src_str)) 
         # raw_input()

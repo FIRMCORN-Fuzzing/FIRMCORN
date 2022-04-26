@@ -20,14 +20,14 @@ class CrashLoader():
         instr = mu.mem_read(address , size)
 
     def mem_crash_check(self, uc, access, address, size, value, user_data):
-        print "   \033[1;31;40m >>>Crash!!!<<< Missing memory is being WRITE at {} \033[0m   ".format(hex(address))
+        print( "   \033[1;31;40m >>>Crash!!!<<< Missing memory is being WRITE at {} \033[0m   ".format(hex(address)))
         current_pc = uc.reg_read(self.fc.REG_PC , self.fc.size)
-        print ">> pc: {}".format(hex(current_pc))
+        print (">> pc: {}".format(hex(current_pc)))
         self.fc.show_reg_value()
         self.fc.show_instrs()
 
     def crash_check_dbg(self, uc ,address , size , user_data):
-        print "Memory fetech error : {}".format(hex(address)) 
+        print( "Memory fetech error : {}".format(hex(address)) )
 
     def crash_log(self):
         if not os.path.exists("outputs"):

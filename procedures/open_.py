@@ -16,5 +16,5 @@ class open_():
         self.enable_debug = enable_debug
         
     def run(self ):
-        print "open"
+        print( "open")
         return 1

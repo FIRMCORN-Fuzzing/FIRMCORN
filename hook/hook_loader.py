@@ -4,8 +4,8 @@ import os
 import json
 from pwn import *
 
-from func_emu import *
-from hook_auto import *
+from hook.func_emu import *
+from hook.hook_auto import *
 
 from unicorn import *
 from unicorn.arm_const import *
@@ -58,12 +58,12 @@ class HookLoader(object):
             """
             func  = self.func_alt_addr[address]
             if self.debug_func:
-                print  "func : {0} ; argc : {1}".format(func, self.argcs)
+                print  ("func : {0} ; argc : {1}".format(func, self.argcs))
             # fc <==> firmcorn class <--- Uc class
             # 1 , get return address
             reg_sp = self.fc.reg_read(self.REG_SP)
             # we should get address value from stack
-            print hex(reg_sp)
+            print( hex(reg_sp))
             if self.REG_RA == 0: 
                 ret_addr = unpack(self.pack_fmt , str(self.fc.mem_read(reg_sp , self.size)))[0]
             else:
@@ -71,12 +71,12 @@ class HookLoader(object):
             
             # 2 , get args by argc
             if self.debug_func:
-                print "ret_addr : {}".format(hex(ret_addr))
+                print ("ret_addr : {}".format(hex(ret_addr)))
     
             # 3 , execute custom function and get return value
             res = func() 
             if self.debug_func:
-                print "ret_addr : {}; args : {}; res : {}".format(ret_addr , self.argcs , res)
+                print ("ret_addr : {}; args : {}; res : {}".format(ret_addr , self.argcs , res))
             if type(res) != int: res = 0 # return value is not very import for fuzz , easpically return value is not int type
             # multiple return values should to be considered, maybe 
             self.fc.reg_write(self.REG_RES[0] , res)
@@ -105,7 +105,7 @@ class HookLoader(object):
             """
             func  = self.func_alt_addr[address]
             if self.debug_func:
-                print  "func : {0} ".format(func)
+                print ( "func : {0} ".format(func))
             # fc <==> firmcorn class <--- Uc class
             # 1 , get return address
             reg_sp = self.fc.reg_read(self.REG_SP)
@@ -121,12 +121,12 @@ class HookLoader(object):
             
             # 2 , get args by argc
             if self.debug_func:
-                print "ret_addr : {}".format(hex(ret_addr))
+                print ("ret_addr : {}".format(hex(ret_addr)))
     
             # 3 , execute custom function and get return value
             res = func() 
             if self.debug_func:
-                print "ret_addr : {}; res : {}".format(hex(ret_addr) ,  res)
+                print ("ret_addr : {}; res : {}".format(hex(ret_addr) ,  res))
             if type(res) != int: res = 0 # return value is not very import for fuzz , easpically return value is not int type
             # multiple return values should to be considered, maybe 
             self.fc.reg_write(self.REG_RES[0] , res)
@@ -141,7 +141,7 @@ class HookLoader(object):
         self.debug_func = False
         if address in self.fc.skip_func_list:
             if self.debug_func:
-                print "address skip:{:#x}".format(address)
+                print ("address skip:{:#x}".format(address))
             self.fc.reg_write( self.REG_PC ,  address+size)
 
     def hook_unresolved_func(self , uc , address , size , user_data):
@@ -149,7 +149,7 @@ class HookLoader(object):
         if self.fc.mem_got.get(address):
             if self.fc.mem_got[address]  in  self.fc.unresolved_funcs:
                 if self.debug_func:
-                    print "find unresolved function : {}".format(self.fc.mem_got[address])
+                    print ("find unresolved function : {}".format(self.fc.mem_got[address]))
                 self.func_alt( address , self.funcemu.func_list[self.fc.mem_got[address]] )
                 self.fc.hook_add(UC_HOOK_CODE , self._func_alt) 
 

@@ -22,4 +22,4 @@ class sprintf():
         formats = self.fc.reg_read(self.hc.REG_ARGS[1])
         arg1 = self.fc.reg_read(self.hc.REG_ARGS[2])
         if self.enable_debug:
-            print "strings: {} formats:{} arg1:{}".format(hex(strings), hex(formats), hex(arg1))    
+            print ("strings: {} formats:{} arg1:{}".format(hex(strings), hex(formats), hex(arg1))  )  
