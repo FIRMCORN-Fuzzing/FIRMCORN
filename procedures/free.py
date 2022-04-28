@@ -13,4 +13,4 @@ class free():
         self.enable_debug = enable_debug
         
     def run(self ):
-        print "free"
+        print ("free")

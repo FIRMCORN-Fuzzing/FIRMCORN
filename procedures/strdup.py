@@ -13,14 +13,14 @@ class strdup():
         self.enable_debug = enable_debug
         self.call_num = call_num
     def run(self ):
-        print "strdup"
+        print ("strdup")
         src_addr  = self.fc.reg_read(self.hc.REG_ARGS[0])
         if self.enable_debug:
-            print "src_addr : {}".format(hex(src_addr))
+            print ("src_addr : {}".format(hex(src_addr)))
         src_str = self.fc.mem_read(src_addr , 0x400)
-        print "src_str : {}".format(src_str)
+        print ("src_str : {}".format(src_str))
         dest_str = 0x6000 + 1024 * 1024 * self.call_num
-        print "call num : {}".format(self.call_num)
+        print ("call num : {}".format(self.call_num))
         self.fc.mem_map(dest_str , 1024 * 1024)
         self.fc.mem_write(dest_str , str(src_str))
         return dest_str

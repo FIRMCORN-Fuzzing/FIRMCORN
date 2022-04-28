@@ -16,5 +16,5 @@ class fcntl():
         self.enable_debug = enable_debug
         
     def run(self ):
-        print "fcntl"
+        print ("fcntl")
         # return 1

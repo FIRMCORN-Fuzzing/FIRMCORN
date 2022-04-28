@@ -16,7 +16,7 @@ class snprintf():
         self.enable_debug = enable_debug
 
     def run(self ):
-        print "snprintf"
+        print ("snprintf")
         if self.fc.arch == "x32":
             return 1
         strings = self.fc.reg_read(self.hc.REG_ARGS[0])
@@ -24,4 +24,4 @@ class snprintf():
         arg1 = self.fc.reg_read(self.hc.REG_ARGS[2])
         arg2 = self.fc.reg_read(self.hc.REG_ARGS[3])
         if self.enable_debug:
-            print "strings: {} formats:{} arg1:{} arg2:{}".format(hex(strings), hex(formats), hex(arg1) , hex(arg2))    
+            print ("strings: {} formats:{} arg1:{} arg2:{}".format(hex(strings), hex(formats), hex(arg1) , hex(arg2)))    

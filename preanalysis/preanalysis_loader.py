@@ -95,7 +95,7 @@ class PreanalysisTarget():
                 memop_num = self.get_memop_num(v[i])
                 vuln_rate = sensitive_index + memop_num
                 if vuln_rate == 0:
-                    print "Vuln Rate 0 function : {} --> {}".format(hex(v[i]) , GetFunctionName(v[i]))
+                    print ("Vuln Rate 0 function : {} --> {}".format(hex(v[i]) , GetFunctionName(v[i])))
                     # continue
                 tmp.append(sensitive_index)
                 tmp.append(memop_num)
@@ -107,7 +107,7 @@ class PreanalysisTarget():
         self.vuln_sort_dict = [ (k , self.vuln_sort_dict[k]) for k in sorted(self.vuln_sort_dict.keys())]
         # for k in self.vuln_sort_dict:
         #     print k
-        print self.vuln_sort_dict
+        print (self.vuln_sort_dict)
         return self.vuln_sort_dict 
 
     def vuln_sort_show(self):
@@ -132,7 +132,7 @@ class PreanalysisTarget():
         # self.vuln_sort_dict = [ (k , self.vuln_sort_dict[k]) for k in sorted(self.vuln_sort_dict.keys())]
         # for k in self.vuln_sort_dict:
         #     print k
-        print self.vuln_sort_dict
+        print (self.vuln_sort_dict)
         return self.vuln_sort_dict 
 
     def get_sensitive_index(self , func_ea):
@@ -145,7 +145,7 @@ class PreanalysisTarget():
             for func in SENSITIVE_FUNC_LIST:
                 if func == sub_func:
                     if self.enable_debug:
-                        print "find sensitive func: {}".format(sub_func)
+                        print ("find sensitive func: {}".format(sub_func))
                     indexs += 10    
                 else:
                     continue
@@ -207,7 +207,7 @@ class PreanalysisTarget():
                     memop_num += 1
                     # print dism_instr
             else:
-                print "unknow arch"
+                print ("unknown arch")
         # print "memop_num: {}   all_op_num{} , rate: {} ".format(memop_num , allop_num,  int((float(memop_num) / float(allop_num)) * 100))
         return int(( memop_num / len(dism_addr) )* 10.0)
 
@@ -233,8 +233,8 @@ class PreanalysisTarget():
 
 
 target = PreanalysisTarget()
-print "==============================Complex Sort=============================="
+print ("==============================Complex Sort==============================")
 target.complex_sort()
-print "==========================Vulnerability Sort============================"
+print ("==========================Vulnerability Sort============================")
 # target.vuln_sort()
 target.vuln_sort_show()

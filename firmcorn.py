@@ -1,3 +1,4 @@
+
 import sys
 import logging 
 import os
@@ -151,8 +152,8 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
         """
         read GOT table entries in memory 
         """
-        print "=====================Init GOT Table Start========================"
-        print self.got.items()
+        print ("=====================Init GOT Table Start========================")
+        print (self.got.items())
         self.mem_got = dict()
         for name , addr in self.got.items():
             _addr = str(self.mem_read(addr , self.size)).encode("hex") 
@@ -161,30 +162,30 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
             else:
                 _addr = int(_addr , 16)
             self.mem_got.update({ _addr : name})
-            print "Name : {:<40} Addr : {:<10} Value: {:<10}".format( name, hex(addr) , hex(_addr))
-        print "======================Init GOT Table End========================="
+            print ("Name : {:<40} Addr : {:<10} Value: {:<10}".format( name, hex(addr) , hex(_addr)))
+        print ("======================Init GOT Table End=========================")
         
     def rebased_got(self):
         """
         reload GOT table entries
         """
         self.rebase_got = dict()
-        print "====================Rebase GOT Table Start=======================" 
+        print ("====================Rebase GOT Table Start=======================" )
         for addr , name in self.mem_got.items():
             if int(addr) & 0xff000000 != 0:
                 dl_resolve_addr = addr 
                 dl_resolve_name = name 
                 break
-        print self.libc
+        print (self.libc)
         libc_base = dl_resolve_addr - self.libc.symbols[dl_resolve_name] 
-        print "libc_base : {}".format(hex(libc_base))
+        print ("libc_base : {}".format(hex(libc_base)))
         for addr , name  in self.mem_got.items():
             if self.libc.symbols.has_key(name):
                 self.rebase_got.update( { name :  libc_base + self.libc.symbols[name]   })
-                print "Name : {:<40} Rebase addr : {}".format(name , hex(libc_base + self.libc.symbols[name]) )
+                print ("Name : {:<40} Rebase addr : {}".format(name , hex(libc_base + self.libc.symbols[name]) ))
                 
         #raw_input()
-        print "=====================Rebase GOT Table End========================" 
+        print ("=====================Rebase GOT Table End========================" )
 
     def dbg_hook_code(mu, address, size, user_data):  
         print('>>> Tracing instruction at 0x%x, instruction size = 0x%x' %(address, size))
@@ -202,11 +203,11 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
         # setup register
         for register , value in regs.iteritems():
             if self.enable_debug and value is not None:
-                print "Reg {0} start_address = {1}".format(register, hex(value)) 
+                print ("Reg {0} start_address = {1}".format(register, hex(value))) 
                 pass
             if not regs_map.has_key(register.lower()):
                 if self.enable_debug:
-                    print "Skip Reg:{0}".format(register)
+                    print( "Skip Reg:{0}".format(register))
             else:
                 # ====copy from unicorn loader.py=====
                 # 
@@ -216,15 +217,15 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
                     reg_write_retry = False
                 except Exception as e:
                     if self.enable_debug:
-                        print "ERROR writing register: {}, value: {} -- {}".format(register, value, repr(e)) 
+                        print ("ERROR writing register: {}, value: {} -- {}".format(register, value, repr(e)) )
                 if reg_write_retry:
                     if self.enable_debug:
-                        print "Trying to parse value ({}) as hex string".format(value)
+                        print ("Trying to parse value ({}) as hex string".format(value))
                     try:
                         self.reg_write(regs_map[register.lower()], int(value, 16))
                     except Exception as e:
                         if self.enable_debug:
-                            print "ERROR writing hex string register: {}, value: {} -- {}".format(register, value, repr(e))
+                            print ("ERROR writing hex string register: {}, value: {} -- {}".format(register, value, repr(e)))
         
         return True
 
@@ -247,7 +248,7 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
                 (UC_PROT_EXEC  if segment['permissions']['x'] == True else 0)        
 
             if self.enable_debug:
-                print "Handling segment {}".format(seg_name) 
+                print ("Handling segment {}".format(seg_name) )
             """
             before map memory , do some check
             there are 3 cases:
@@ -312,7 +313,7 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
             # Map memory into the address space if it is of an acceptable size.
             if (seg_end - seg_start) > MAX_ALLOWABLE_SEG_SIZE:
                 if self.enable_debug:
-                    print "Skipping segment (LARGER THAN {0}) from {1:016x} - {2:016x} with perm={3}: {4}".format(MAX_ALLOWABLE_SEG_SIZE, seg_start, seg_end, perms, name)
+                    print ("Skipping segment (LARGER THAN {0}) from {1:016x} - {2:016x} with perm={3}: {4}".format(MAX_ALLOWABLE_SEG_SIZE, seg_start, seg_end, perms, name))
                 continue
             elif not found:           # Make sure it's not already mapped
                 if overlap_start:     # Partial overlap (start) case 3
@@ -323,7 +324,7 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
                     self.map_segment(seg_name, seg_start, seg_end - seg_start, perms)
             else:
                 if self.enable_debug:
-                    print "Segment {} already mapped. Moving on.".format(seg_name) 
+                    print ("Segment {} already mapped. Moving on.".format(seg_name) )
 
             # Load the content (*.bin)
             # directly copy from unicorn_loader.py
@@ -332,7 +333,7 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
                 if not os.path.isfile(content_file_path):
                     raise Exception("Unable to find segment content file. Expected it to be at {}".format(content_file_path))
                 if self.enable_debug:
-                    print "Loading content for segment {} from {}".format(seg_name, segment['content_file'])
+                    print ("Loading content for segment {} from {}".format(seg_name, segment['content_file']))
                 content_file = open(content_file_path, 'rb')
                 compressed_content = content_file.read()
                 content_file.close()
@@ -354,9 +355,9 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
         map_start_align = ALIGN_PAGE_DOWN(map_start)
         map_end_align = ALIGN_PAGE_UP(map_end)
         if self.enable_debug:
-            print " segment name: {}".format(name)
-            print " segment start: {0:016x} -> {1:016x}".format(map_start, map_start_align)
-            print " segment end:   {0:016x} -> {1:016x}".format(map_end, map_end_align)
+            print (" segment name: {}".format(name))
+            print (" segment start: {0:016x} -> {1:016x}".format(map_start, map_start_align))
+            print (" segment end:   {0:016x} -> {1:016x}".format(map_end, map_end_align))
         if map_start_align < map_end_align: 
             self.mem_map(map_start_align , map_end_align - map_start_align , perms) # map memory
 
@@ -372,7 +373,7 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
     def _set_trace(self , uc , address , size , user_data):
         if address >= self.trace_start_addr and address <=self.trace_end_addr:
             # print('>>> Tracing instruction at 0x%x, instruction size = 0x%x' %(address, size))
-            print "{} ".format(hex(address)) , 
+            print ("{} ".format(hex(address)) , )
             instr = self.mem_read(address, size)
             # context.arch      = 'i386'
             context.endian    = str(self.endian)
@@ -380,13 +381,13 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
             # context.word_size = 32
             # print ("0x%x %s" % (address - BASE ,   disasm(instr)) )
             if  self.arch == "x86":
-                print "{}".format( disasm(instr , arch="{}".format("i386")))
+                print ("{}".format( disasm(instr , arch="{}".format("i386"))))
             elif self.arch == "x64":
-                print "{}".format( disasm(instr , arch="{}".format("amd64")))
+                print ("{}".format( disasm(instr , arch="{}".format("amd64"))))
             elif self.arch == "mips":
-                print "{}".format( disasm(instr , arch="{}".format("mips")))
+                print ("{}".format( disasm(instr , arch="{}".format("mips"))))
             elif self.arch == "arm":
-                print "{}".format( disasm(instr , arch="{}".format("arm")))
+                print ("{}".format( disasm(instr , arch="{}".format("arm"))))
             else:
                 raise Exception("arch not found")
 
@@ -439,10 +440,10 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
         """
         print crash location instruction
         """
-        print "=========================Instructions=========================="
+        print( "=========================Instructions==========================")
         for instr in self.instrs[:-50:-1]:
             print('>>> Tracing instruction at 0x%x, instruction size = 0x%x' %(instr, self.size))
-        print "==============================================================="
+        print( "===============================================================")
 
     def log_instrs(self , uc , address , size , user_data):
         self.instrs.append(address)
@@ -457,13 +458,13 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
         self.fuzztarget = fuzzTarget
 
     def start_find(self , start_address , end_address):
-        print "  ______ _____ _____  __  __  _____ ____  _____  _   _  "
-        print " |  ____|_   _|  __ \|  \/  |/ ____/ __ \|  __ \| \ | | "
-        print " | |__    | | | |__) | \  / | |   | |  | | |__) |  \| | "
-        print " |  __|   | | |  _  /| |\/| | |   | |  | |  _  /| . ` | "
-        print " | |     _| |_| | \ \| |  | | |___| |__| | | \ \| |\  | "
-        print " |_|    |_____|_|  \_\_|  |_|\_____\____/|_|  \_\_| \_| "
-        print "                                                        "
+        print ("  ______ _____ _____  __  __  _____ ____  _____  _   _  ")
+        print (" |  ____|_   _|  __ \|  \/  |/ ____/ __ \|  __ \| \ | | ")
+        print (" | |__    | | | |__) | \  / | |   | |  | | |__) |  \| | ")
+        print (" |  __|   | | |  _  /| |\/| | |   | |  | |  _  /| . ` | ")
+        print (" | |     _| |_| | \ \| |  | | |___| |__| | | \ \| |\  | ")
+        print (" |_|    |_____|_|  \_\_|  |_|\_____\____/|_|  \_\_| \_| ")
+        print ("                                                        ")
         # uc_result = self.emu_start(start_address , end_address)
         self.unresolved_funcs = []
         rounds = 0
@@ -489,21 +490,21 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
             try:
                 uc_result = self.emu_start(start_address , end_address)
             except UcError as e:
-                print "next round"
-                print "Round : {}".format(rounds)
+                print ("next round")
+                print ("Round : {}".format(rounds))
                 rounds += 1
-                print  "find all unresolved funcs : {}".format(self.unresolved_funcs)
+                print  ("find all unresolved funcs : {}".format(self.unresolved_funcs))
                 # raw_input()
             # raw_input()
             if len(self.unresolved_funcs) == last_round_list_len:
-                print self.unresolved_funcs
-                print "End Find!"
+                print (self.unresolved_funcs)
+                print ("End Find!")
                 break
 
     def start_run(self , start_address , end_address):
         self.start_find(start_address , end_address)
-        print "=================End Find================="
-        print "start run!"
+        print ("=================End Find=================")
+        print ("start run!")
         # raw_input()
         rounds = 0
         while True:
@@ -538,15 +539,15 @@ class Firmcorn( Uc ): # Firmcorn object inherit from Uc object
             try:
                 uc_result = self.emu_start(start_address , end_address)
             except UcError as e:
-                print e.errno
+                print( e.errno)
                 if e.errno == UC_ERR_FETCH_UNMAPPED:
-                    print "   \033[1;31;40m !!! Find Crash !!! \033[0m   "
+                    print ("   \033[1;31;40m !!! Find Crash !!! \033[0m   ")
                     self.crash.crash_log()
                     break
 
             newtime=datetime.datetime.now()
-            print "time : {}".format( (newtime-oldtime).microseconds )
-            print "Round : {}".format(rounds)
+            print ("time : {}".format( (newtime-oldtime).microseconds ))
+            print ("Round : {}".format(rounds))
             rounds += 1
             # raw_input()
 

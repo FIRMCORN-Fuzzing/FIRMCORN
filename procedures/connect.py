@@ -17,4 +17,4 @@ class connect():
 
     def run(self ):
         # not implement 
-        print "connect"
+        print ("connect")

@@ -17,9 +17,9 @@ class socket():
 
     def run(self ):
         # not implement 
-        print "socket"
+        print ("socket")
         arg1 = self.fc.reg_read(self.hc.REG_ARGS[0])
         arg2 = self.fc.reg_read(self.hc.REG_ARGS[1])
         arg3 = self.fc.reg_read(self.hc.REG_ARGS[2])
         if self.enable_debug:
-            print "arg1: {} arg2:{} arg3:{}".format(hex(arg1), hex(arg2), hex(arg3))
+            print ("arg1: {} arg2:{} arg3:{}".format(hex(arg1), hex(arg2), hex(arg3)))

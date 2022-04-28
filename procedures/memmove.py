@@ -13,12 +13,12 @@ class memmove():
         self.enable_debug = enable_debug
 
     def run(self ):
-        print "memmove"
+        print ("memmove")
         src_addr = self.fc.reg_read(self.hc.REG_ARGS[0])
         dest_addr = self.fc.reg_read(self.hc.REG_ARGS[1])
         n =  self.fc.reg_read(self.hc.REG_ARGS[2])
         src_str = self.fc.mem_read(src_addr , n)
         if self.enable_debug:
-            print "src_addr : {} dest_addr : {} n : {}".format(hex(src_addr) , hex(dest_addr), n )
-            print "src_str : {}".format(str(src_str))
+            print ("src_addr : {} dest_addr : {} n : {}".format(hex(src_addr) , hex(dest_addr), n ))
+            print ("src_str : {}".format(str(src_str)))
         self.fc.mem_write(dest_addr ,str(src_str)) 

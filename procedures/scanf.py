@@ -23,8 +23,8 @@ class scanf():
         fmt = self.fc.reg_read(self.hc.REG_ARGS[0])
         buf = self.fc.reg_read(self.hc.REG_ARGS[1])
         if self.enable_debug:
-            print "fmt: {} ; buf : {:#x}".format(fmt , buf)
+            print ("fmt: {} ; buf : {:#x}".format(fmt , buf))
         self.fc.mem_write(buf , inputs)
         if self.enable_debug:
-            print "scanf buf: {}".format(self.fc.mem_read(0x7fffffffdb30,0x10) )
-        print "scanf compelte"
+            print ("scanf buf: {}".format(self.fc.mem_read(0x7fffffffdb30,0x10) ))
+        print ("scanf compelte")

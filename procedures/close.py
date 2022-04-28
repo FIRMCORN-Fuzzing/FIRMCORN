@@ -16,5 +16,5 @@ class close():
         self.enable_debug = enable_debug
         
     def run(self ):
-        print "close"
+        print ("close")
         # return 1

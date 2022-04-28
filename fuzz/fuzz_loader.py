@@ -52,7 +52,7 @@ class Fuzzer():
         fuzz_data_str = fuzz_data.communicate( self.datas )[0]
 
         if self.enable_debug == True:
-            print fuzz_data_str
+            print (fuzz_data_str)
         return fuzz_data_str
 
     def get_generate_data(self):
@@ -67,7 +67,7 @@ class Fuzzer():
         """
         if address in self.fuzz_func_list:
             if self.enable_debug:
-                print "function fuzz address : {}".format(hex(address))
+                print ("function fuzz address : {}".format(hex(address)))
                 print('>>> Tracing instruction at 0x%x, instruction size = 0x%x' %(address, size))
             # 1 , get return address
             reg_sp = self.fc.reg_read(self.REG_SP)
@@ -84,21 +84,21 @@ class Fuzzer():
             # 3. map a memory to store res_data
             res_addr = INPUT_BASE
             if self.enable_debug:
-                print res_addr
-                print type(res_addr)
+                print (res_addr)
+                print (type(res_addr))
             self.fc.mem_map(INPUT_BASE , 1024*1024)
             
             # 4. write res_data to res_addr
             self.fc.mem_write( INPUT_BASE , res)
             if self.enable_debug:
-                print "get malformed data :{}".format(res)
-                print "return addr : {}".format(hex(ret_addr))
+                print ("get malformed data :{}".format(res))
+                print ("return addr : {}".format(hex(ret_addr)))
             # 3. write malformed data to REG_RES and change REG_PC
             self.fc.reg_write(self.REG_RES , INPUT_BASE)
             self.fc.reg_write(self.REG_PC , ret_addr)
             if self.enable_debug:
-                print "reg_res : {}".format( str(self.fc.mem_read(INPUT_BASE , self.size)))
-                print "ret_addr : {}".format(str(self.fc.reg_read(self.REG_PC , self.size)))
+                print( "reg_res : {}".format( str(self.fc.mem_read(INPUT_BASE , self.size))))
+                print ("ret_addr : {}".format(str(self.fc.reg_read(self.REG_PC , self.size))))
 
     def find_magic_num(self, uc , address , size , user_data):
         if self.fc.mem_got.get(address) is not None or self.fc.rebase_got.get(address):
@@ -110,16 +110,16 @@ class Fuzzer():
                 except:
                     continue
                 if MAGIC in mem_value:
-                    print "find magic : {}".format(mem_value)
-                    print "magic function name : {}".format(self.fc.mem_got[address])
-                    print "reg_arg_value : {}".format(hex(reg_arg_value))
+                    print ("find magic : {}".format(mem_value))
+                    print ("magic function name : {}".format(self.fc.mem_got[address]))
+                    print ("reg_arg_value : {}".format(hex(reg_arg_value)))
                     malformed_data = self.get_mutate_data()
                     mem_value_new = mem_value.replace(MAGIC , malformed_data)
                     self.fc.malformed_data = mem_value_new
-                    print "new data : {}".format(mem_value_new)
+                    print ("new data : {}".format(mem_value_new))
                     #raw_input()
                     self.fc.mem_write(reg_arg_value , str(mem_value_new))
-                    print "write done"
+                    print ("write done")
                     break
 
     def get_common_regs(self):
